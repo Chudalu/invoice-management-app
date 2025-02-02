@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode; 
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside className="w-64 bg-blue-800 text-white p-5">
-                <h2 className="text-2xl font-bold">IMC Client</h2>
+                <h2 className="text-2xl font-bold">IMS Client</h2>
                 <nav className="mt-5">
                     <ul>
                         <li className="mb-3">
