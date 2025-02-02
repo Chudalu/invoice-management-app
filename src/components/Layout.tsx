@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useAuthStore } from '../store/auth';
 import { useRouter } from 'next/router';
+import NotificationBell from './NotificationBell';
 
 export default function Layout({ children }: { children: React.ReactNode; }) {
     const { user, logout } = useAuthStore();
@@ -36,7 +37,10 @@ export default function Layout({ children }: { children: React.ReactNode; }) {
                 {/* Top Navbar */}
                 <div className="flex justify-between items-center bg-white p-3 shadow">
                     <h2 className="text-xl font-bold">Welcome, {user?.userName}</h2>
-                    <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">Logout</button>
+                    <div className="flex">
+                        <NotificationBell />
+                        <button onClick={handleLogout} className="bg-red-500 text-white px-3 mx-1 py-1 rounded">Logout</button>
+                    </div>
                 </div>
 
                 {/* Page Content */}
