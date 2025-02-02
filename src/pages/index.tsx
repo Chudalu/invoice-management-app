@@ -26,7 +26,7 @@ export default function LoginPage() {
                 config.token = res.data?.jwtToken;
                 let user = getUserFromToken(res.data?.jwtToken);
                 if (user.role == RoleEnum.ADMIN) router.push('/dashboard');
-                else router.push('/invoices');
+                else router.push('/my-invoices');
             } else {
                 let error = Array.isArray(res.error?.message) ? (res.error?.message).join(', ') : res.error?.message;
                 setError(error);

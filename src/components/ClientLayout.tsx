@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useAuthStore } from '../store/auth';
 import { useRouter } from 'next/router';
 
-export default function Layout({ children }: { children: React.ReactNode; }) {
+export default function ClientLayout({ children }: { children: React.ReactNode; }) {
     const { user, logout } = useAuthStore();
     const router = useRouter();
 
@@ -14,18 +14,15 @@ export default function Layout({ children }: { children: React.ReactNode; }) {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 text-white p-5">
-                <h2 className="text-2xl font-bold">IMS Admin</h2>
+            <aside className="w-64 bg-blue-800 text-white p-5">
+                <h2 className="text-2xl font-bold">IMC Client</h2>
                 <nav className="mt-5">
                     <ul>
                         <li className="mb-3">
-                            <Link href="/dashboard" className="block p-2 hover:bg-gray-700 rounded">Dashboard</Link>
+                            <Link href="/my-invoices" className="block p-2 hover:bg-blue-700 rounded">My Invoices</Link>
                         </li>
                         <li className="mb-3">
-                            <Link href="/invoices" className="block p-2 hover:bg-gray-700 rounded">Invoices</Link>
-                        </li>
-                        <li className="mb-3">
-                            <Link href="/users" className="block p-2 hover:bg-gray-700 rounded">Users</Link>
+                            <Link href="/add-invoice" className="block p-2 hover:bg-blue-700 rounded">Add Invoice</Link>
                         </li>
                     </ul>
                 </nav>

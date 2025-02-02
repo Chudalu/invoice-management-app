@@ -68,6 +68,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/authentication/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["registerUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/authentication/logout": {
         parameters: {
             query?: never;
@@ -158,6 +174,8 @@ export interface components {
             role: "USER" | "ADMIN";
             /** @enum {string} */
             status: "ACTIVE" | "INACTIVE" | "DELETED" | "FLAGGED";
+            /** Format: date-time */
+            createdAt: string;
         };
         LoggedInUserDto: {
             sub?: string;
@@ -314,6 +332,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthenticationResponseDto"];
+                };
+            };
+        };
+    };
+    registerUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIResponseDto"];
                 };
             };
         };

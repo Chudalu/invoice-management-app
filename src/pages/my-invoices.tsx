@@ -1,12 +1,13 @@
-import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 import { useRouter } from 'next/router';
-import { config, GET, PATCH } from '@/api-service/api';
+import { config, GET } from '@/api-service/api';
 import { components } from '@/api-service/service';
+import ClientLayout from '@/components/ClientLayout';
+import Link from 'next/link';
 
-export default function InvoicesPage() {
-    const { token } = useAuthStore();
+export default function MyInvoicesPage() {
+    const { token, user } = useAuthStore();
     const router = useRouter();
 
     const removeEmpty = (obj: any): any => {
@@ -19,12 +20,7 @@ export default function InvoicesPage() {
     };
 
     const fetchInvoices = async (filters: { title?: string; amount?: string; invoiceStatus?: string; }) => {
-        console.log(filters);
-        return await GET('/api/v1/invoice', { params: { query: { ...removeEmpty(filters) } }, headers: { authorization: `Bearer ${config.token}` } });
-    };
-
-    const updateInvoiceStatus = async (id: number, invoiceStatus: "PAID" | "UNPAID" | "DECLINED") => {
-        return await PATCH(`/api/v1/invoice/status/{id}`, { body: { invoiceStatus }, params: { path: { id } }, headers: { authorization: `Bearer ${config.token}` } });
+        return await GET('/api/v1/invoice', { params: { query: { ...removeEmpty(filters), userId: user?.id } }, headers: { authorization: `Bearer ${config.token}` } });
     };
 
     useEffect(() => {
@@ -63,18 +59,15 @@ export default function InvoicesPage() {
         setSearchFilters({ ...searchFilters, [e.target.name]: e.target.value });
     };
 
-    // Handle status update
-    const handleStatusChange = async (invoiceId: number, status: any) => {
-        let res = await updateInvoiceStatus(invoiceId, status);
-        if (res.response.ok) {
-            alert('Invoice status updated');
-        } else alert('Failed to update invoice status');
-        getInvoices(); // Refresh invoices after update
-    };
-
     return (
-        <Layout>
+        <ClientLayout>
             <h1 className="text-2xl font-bold">Invoices</h1>
+
+            <div className="mt-3">
+                <Link href="/add-invoice" className="bg-blue-500 text-white px-4 py-2 rounded">
+                    + Add New Invoice
+                </Link>
+            </div>
 
             {/* Search Filters */}
             <div className="flex space-x-4 mt-5">
@@ -119,7 +112,7 @@ export default function InvoicesPage() {
                             <th className="border p-2">Date</th>
                             <th className="border p-2">Amount</th>
                             <th className="border p-2">Status</th>
-                            <th className="border p-2">Update Status</th>
+                            <th className="border p-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,21 +124,18 @@ export default function InvoicesPage() {
                                 <td className="border p-2">${invoice.amount}</td>
                                 <td className="border p-2">{invoice.invoiceStatus}</td>
                                 <td className="border p-2">
-                                    <select
-                                        value={invoice.invoiceStatus}
-                                        onChange={(e) => handleStatusChange(invoice.id, e.target.value)}
-                                        className="p-2 border rounded"
+                                    <Link
+                                        href={`/edit-invoice/${invoice.id}`}
+                                        className="bg-yellow-500 text-white px-3 py-1 rounded"
                                     >
-                                        <option value="PAID">PAID</option>
-                                        <option value="UNPAID">UNPAID</option>
-                                        <option value="DECLINED">DECLINED</option>
-                                    </select>
+                                        Edit
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             ) : <p className="mt-5 text-center font-bold">No invoice found</p>}
-        </Layout>
+        </ClientLayout>
     );
 }
